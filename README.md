@@ -1,13 +1,14 @@
 # MUD - Musical Universes of Discourse
 
-#### Overtone verbosity
+#### Why?
 
 Overtone is extremely powerful at the cost of verbosity. Live coding requires quite a lot of code.
 Snippet expansion can help alleviate but it does hinder the range expression and clutters the visual
 experience for the audience reading along with the code.
 
-#### Focus on immediacy of expression and creation.
+#### What?
 
+Focus on immediacy of expression and creation.
 MUD is a layer over Overtone to make live composition more power and immediate.
 
 * Its centered around using Supercollider for timing rather than Java.
