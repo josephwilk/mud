@@ -3,7 +3,7 @@
 #### Why?
 
 Overtone is extremely powerful at the cost of verbosity. Live coding requires quite a lot of code.
-Snippet expansion can help alleviate but it does hinder the range expression and clutters the visual
+Snippet expansion can help alleviate but it does hinder the range of expression and clutters the visual
 experience for the audience reading along with the code.
 
 #### What?
