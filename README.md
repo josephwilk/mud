@@ -11,10 +11,15 @@ experience for the audience reading along with the code.
 Focus on immediacy of expression and creation.
 MUD is a layer over Overtone to make live composition more power and immediate.
 
-* Its centered around using Supercollider for timing rather than Java.
-* Buffers are the way to communicate.
+#### Goals
 
-## Examples
+* Its centered around using Supercollider for timing rather than Java.
+* Buffers are the default way to express patterns.
+* Keep it Clojure, support Clojures fns to manipulate patterns.
+
+## Madeup Examples
+
+These examples do not exist, they are sketches in code.
 
 ```clojure
 (use 'mud.core)
