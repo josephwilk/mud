@@ -3,7 +3,7 @@
   (:require
    [overtone.synth.timing :as timing]))
 
-(defonce timing-g (group "stars timing" :tgt (foundation-safe-pre-default-group)))
+(defonce timing-g (group "mud timing" :tgt (foundation-safe-pre-default-group)))
 
 (defonce root-b       (control-bus))
 (defonce inv-root-b   (control-bus))
