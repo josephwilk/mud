@@ -1,5 +1,6 @@
 (ns mud.core
-  (:use overtone.live))
+  (:use overtone.live)
+  (:require [mud.timing :as time]))
 
 (def overtime-default-sleep 200)
 
