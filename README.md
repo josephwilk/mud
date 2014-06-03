@@ -34,7 +34,7 @@ These examples do not exist, they are sketches in code.
 ;;Write a pattern on a beat one time (based on main-beat by default)
 (pat-at 8 notes-buf [5 3 7] :minor :F3)
 
-;;Keep writing a pattern every beat.
+;;Keep writing a pattern every nth beat.
 (pat-repeat 8 notes-buf #(degrees (shuffle [5 3 7]) :minor :F3))
 
 ;;Create a sequencer which specifies samples as well as on/offs
