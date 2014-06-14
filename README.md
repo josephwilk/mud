@@ -30,6 +30,8 @@ These examples do not exist, they are sketches in code.
 (pat notes-buf [5 3 7] :minor :F3) ;; Degrees
 (pat notes-buf [:A5 :A3 :A7])      ;; Notes
 (pat notes-buf [300 400 600])      ;; Frequencies
+(pat [notes1-buf notes2-buf notes3-buf] [5 3 7] :minor :F3) ;; Chords
+
 
 ;;Write a pattern on a beat one time (based on main-beat by default)
 (pat-at 8 notes-buf [5 3 7] :minor :F3)
