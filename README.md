@@ -1,25 +1,22 @@
 # MUD - Musical Universes of Discourse
 
-#### Why?
+MUD is a layer over Overtone to make live composition more power and immediate.
+
+MUD focuses on immediacy of expression and creation.
 
 Overtone is extremely powerful at the cost of verbosity. Live coding requires quite a lot of code.
 Snippet expansion can help alleviate but it does hinder the range of expression and clutters the visual
 experience for the audience reading along with the code.
 
-#### What?
+## Install
 
-Focus on immediacy of expression and creation.
-MUD is a layer over Overtone to make live composition more power and immediate.
+```clojure
+[mud "0.1.0-SNAPSHOT"]
+```
 
-#### Goals
+## Usage
 
-* Its centered around using Supercollider for timing rather than Java.
-* Buffers are the default way to express patterns.
-* Keep it Clojure, support Clojures fns to manipulate patterns.
-
-## Functionality
-
-## Chords
+### Chords
 
 Use a single synth/inst def to play chords.
 
@@ -35,9 +32,7 @@ Use a single synth/inst def to play chords.
 (doseq [synth (:synths singing-chord-g)] (ctl synth :amp 0.2))
 ```
 
-## Madeup Examples
-
-These examples do not exist, they are sketches in code.
+### Patterns
 
 ```clojure
 (use 'mud.core)
@@ -60,6 +55,13 @@ These examples do not exist, they are sketches in code.
 ;;Create a sequencer which specifies samples as well as on/offs
 (defonce drums (seqer [kick-s _ kick-s _ snare-s [kick-s snare-s]]))
 ```
+
+## Goals
+
+* Its centered around using Supercollider for timing rather than Java.
+* Buffers are the default way to express patterns.
+* Keep it Clojure, support Clojures fns to manipulate patterns.
+
 
 ## License
 
