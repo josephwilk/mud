@@ -14,7 +14,7 @@
 (def chord-synth-buffer-cache (atom []))
 
 (defn chord-synth [synth-name chord-size & args]
-  "Create multiple instances of a synth so we can easly play chords"
+  "Create multiple instances of a synth so we can easily play chords"
   (let [chord-bufs (map (fn [_] (buffer 256 "chord note buf")) (range 0 chord-size))
         synth-instances (doall (map (fn [b] (apply synth-name (concat args [:note-buf b]))) chord-bufs))]
     (swap! chord-synth-buffer-cache concat chord-bufs )
