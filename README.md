@@ -1,4 +1,4 @@
-# MUD - Musical Universes of Discourse
+# Musical Universes of Discourse
 
 MUD is a layer over Overtone to make live composition more power and immediate.
 
