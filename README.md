@@ -6,6 +6,8 @@ Overtone is extremely powerful at the cost of verbosity. Live coding requires qu
 Snippet expansion can help alleviate but it does hinder the range of expression and clutters the visual
 experience for the audience reading along with the code.
 
+![](http://s30.postimg.org/6gdpkl2g1/piglet_color.png)
+
 ## Install
 
 Add in your project.clj file:
@@ -60,6 +62,9 @@ Writing patterns to buffers. Using many different musical notations.
 * Buffers are the default way to express patterns.
 * Keep it Clojure, support Clojures fns to manipulate patterns.
 
+## Thanks
+
+* Elise Huard for the artwork
 
 ## License
 
