@@ -1,14 +1,14 @@
 # Musical Universes of Discourse
 
-MUD is a layer over Overtone to make live composition more powerful and immediate.
-
-MUD focuses on immediacy of expression and creation.
+MUD is a layer over Overtone which focuses on immediacy of expression and creation.
 
 Overtone is extremely powerful at the cost of verbosity. Live coding requires quite a lot of code.
 Snippet expansion can help alleviate but it does hinder the range of expression and clutters the visual
 experience for the audience reading along with the code.
 
 ## Install
+
+Add in your project.clj file:
 
 ```clojure
 [mud "0.1.0-SNAPSHOT"]
@@ -27,14 +27,14 @@ Use a single synth/inst def to play chords.
 (:bufs singing-chord-g) ;; Access all the bufs of a chord.
 (:synths singing-chord-g) ;; Access all the running synths of a chord.
 
-(chord-pattern singing-chord-g [[:C3 :E3 :F3]]
+(chord-pattern! singing-chord-g [[:C3 :E3 :F3]]
 
 (chord-ctl singing-chord-group-g :amp 0.2)
-;;or
-(doseq [synth (:synths singing-chord-g)] (ctl synth :amp 0.2))
 ```
 
 ### Patterns
+
+Writing patterns to buffers. Using many different musical notations.
 
 ```clojure
 (use 'mud.core)
@@ -42,20 +42,16 @@ Use a single synth/inst def to play chords.
 (defonce notes-buf (buffer 128))
 
 ;;Write a pattern immediately. Supports automatic conversion of degrees or notes.
-(pat notes-buf [5 3 7] :minor :F3) ;; Degrees
-(pat notes-buf [:A5 :A3 :A7])      ;; Notes
-(pat notes-buf [300 400 600])      ;; Frequencies
-(pat [notes1-buf notes2-buf notes3-buf] [5 3 7] :minor :F3) ;; Chords
+(pattern! notes-buf [5 3 7] :minor :F3) ;; Degrees
+(pattern! notes-buf [:A5 :A3 :A7])      ;; Notes
+(pattern! notes-buf [300 400 600])      ;; Frequencies
 
 
 ;;Write a pattern on a beat one time (based on main-beat by default)
-(pat-at 8 notes-buf [5 3 7] :minor :F3)
+(pattern-at! 8 notes-buf [5 3 7] :minor :F3)
 
 ;;Keep writing a pattern every nth beat.
-(pat-repeat 8 notes-buf #(degrees (shuffle [5 3 7]) :minor :F3))
-
-;;Create a sequencer which specifies samples as well as on/offs
-(defonce drums (seqer [kick-s _ kick-s _ snare-s [kick-s snare-s]]))
+(pattern-repeat! 8 notes-buf #(degrees (shuffle [5 3 7]) :minor :F3))
 ```
 
 ## Goals

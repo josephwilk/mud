@@ -4,14 +4,14 @@
 
 (def overtime-default-sleep 200)
 
-(defn pat!
+(defn pattern!
   "Fill a buffer repeating pattern if required.
    Supports integers or notes which will be converted to midi notes"
   [buf & lists]
   (buffer-write! buf (take (buffer-size buf) (cycle (map #(if (keyword? %) (note %) %) (flatten lists))))))
 
-(defn pat-at!
-  "Exactly as `pat!` but only writes on a beat."
+(defn pattern-at!
+  "Exactly as `pattern!` but only writes on a beat."
   [buf beat n & lists]
   (on-trigger
    (:trig-id beat)
@@ -20,7 +20,7 @@
        (apply pattern! (concat [buf] lists))
        (remove-event-handler ::pattern-writer))) ::pattern-writer))
 
-(defn pat-seq!
+(defn pattern-seq!
   "Fill a buffer repeating pattern if required. Support expressing patterns with `x` and `o`.
      For example: `oooxxoo`"
   [buf & lists]
