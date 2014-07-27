@@ -1,12 +1,12 @@
 # Musical Universes of Discourse
 
+<img src="http://s30.postimg.org/6gdpkl2g1/piglet_color.png" alt="MUD painting" title="MUD" align="right" />
+
 MUD is a layer over Overtone which focuses on immediacy of expression and creation.
 
 Overtone is extremely powerful at the cost of verbosity. Live coding requires quite a lot of code.
 Snippet expansion can help alleviate but it does hinder the range of expression and clutters the visual
 experience for the audience reading along with the code.
-
-![](http://s30.postimg.org/6gdpkl2g1/piglet_color.png)
 
 ## Install
 
