@@ -29,7 +29,7 @@ Use a single synth/inst def to play chords.
 
 (chord-pattern singing-chord-g [[:C3 :E3 :F3]]
 
-(ctl-chord singing-chord-group-g :amp 0.2)
+(chord-ctl singing-chord-group-g :amp 0.2)
 ;;or
 (doseq [synth (:synths singing-chord-g)] (ctl synth :amp 0.2))
 ```
