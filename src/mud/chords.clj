@@ -1,6 +1,10 @@
 (ns mud.chords
   (:use mud.core))
 
+(defn chord-ctl
+  "Like `ctl` but for chord groups (multiple synths)"
+  [chord-group & args] (doseq [synth (:synths chord-group)] (apply ctl synth args)))
+
 (defn chord-pattern
   "Write a pattern with list of notes to the buffers specified.
   Useful when creating chords and hence running multiple instances of synths
