@@ -54,6 +54,28 @@ Everything you need to drive synths at beats
           [1 0 0 1 0 1 0])
 ```
 
+## Callbacks on beats
+
+We can define callbacks in Clojure land firing on various beat events.
+
+```clojure
+;;Every 256 beat trigger sample
+(on-beat-trigger 256 #(mono-player pulse-s))
+
+;;Dividing beats into 32 parts play sample at 31st beat
+(sample-trigger #(mono-player pulse-s) 31 32)
+
+;;Dividing beats into 32 parts play sample at 0 beat
+(sample-trigger #(mono-player pulse-s) 0 32)
+
+;;Fire once on beat 0 dividing beats into 128 parts and then remove callback.
+(one-time-beat-trigger 0 128 #(mono-player pulse-s))
+
+;;Remove all registered triggers
+(remove-all-sample-triggers)
+(remove-all-beat-triggers
+ ```
+
 ### Chords
 
 Use a single synth/inst def to play chords.
