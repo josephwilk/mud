@@ -18,20 +18,59 @@ Add in your project.clj file:
 
 ## Usage
 
+## Timing
+
+Everything you need to drive synths at beats
+
+```clojure
+(use '[mud.core])
+(require `[mud.timing :as time])
+
+;;set the rate
+(ctl time/root-s :rate 8.)
+
+;;Set timing controls on a Synth
+
+(defsynth seqer
+"Plays a single channel audio buffer."
+[buf 0 rate 1 out-bus 0 beat-num 0 pattern 0  num-steps 8 beat-bus (:count time/main-beat) beat-trg-bus (:beat time/main-beat) amp 0.7
+ rate-start 0.1
+ rate-limit 0.9]
+(let [cnt      (in:kr beat-bus)
+      rander (mod cnt 1)
+      beat-trg (in:kr beat-trg-bus)
+      bar-trg  (and (buf-rd:kr 1 pattern cnt)
+                    (= beat-num (mod cnt num-steps))
+                    beat-trg)
+      vol      (set-reset-ff bar-trg)]
+  (out out-bus (* vol amp (scaled-play-buf :num-channels 1 :buf-num buf :rate (t-rand:kr rate-start rate-limit rander) :trigger bar-trg)))))
+
+
+(defonce kick-seq (buffer 256))
+(doall (map #(seqer :beat-num %1 :pattern kick-seq :num-steps 8 :buf (freesound-sample 194114)) (range 0 8)))
+
+(pattern! [1 0 0 1 0 0 0]
+          [1 0 0 1 0 0 0]
+          [1 0 0 1 0 1 0])
+```
+
 ### Chords
 
 Use a single synth/inst def to play chords.
 
 ```clojure
+(use '[mud.core])
+(use '[mud.chords])
+
 (def singing-chord-g
   (chord-synth general-purpose-assembly 3 :amp 0.0 :noise-level 0.05 :beat-trg-bus (:beat time/beat-1th) :beat-bus (:count time/beat-1th) :attack 0.1 :release 0.1))
-  
-(:bufs singing-chord-g) ;; Access all the bufs of a chord.
+
+(:bufs   singing-chord-g) ;; Access all the bufs of a chord.
 (:synths singing-chord-g) ;; Access all the running synths of a chord.
 
-(chord-pattern! singing-chord-g [[:C3 :E3 :F3]]
+(chord-pattern! singing-chord-g [[:C3 :E3 :F3]])
 
-(chord-ctl singing-chord-group-g :amp 0.2)
+(ctl (:synths singing-chord-group-g) :amp 0.2)
 ```
 
 ### Patterns
@@ -39,18 +78,16 @@ Use a single synth/inst def to play chords.
 Writing patterns to buffers. Using many different musical notations.
 
 ```clojure
-(use 'mud.core)
+(use '[mud.core])
 
 (defonce notes-buf (buffer 128))
 
-;;Write a pattern immediately. Supports automatic conversion of degrees or notes.
-(pattern! notes-buf [5 3 7] :minor :F3) ;; Degrees
-(pattern! notes-buf [:A5 :A3 :A7])      ;; Notes
-(pattern! notes-buf [300 400 600])      ;; Frequencies
-
+;;Write a pattern immediately
+(pattern! notes-buf (degrees [5 3 7] :minor :F3)) ;; Degrees
+(pattern! notes-buf [:A5 :A3 :A7])                ;; Notes
 
 ;;Write a pattern on a beat one time (based on main-beat by default)
-(pattern-at! 8 notes-buf [5 3 7] :minor :F3)
+(one-time-beat-trigger 0 128 #(pattern! notes-buf (degrees [5 3 7] :minor :F3)))
 
 ;;Keep writing a pattern every nth beat.
 (pattern-repeat! 8 notes-buf #(degrees (shuffle [5 3 7]) :minor :F3))

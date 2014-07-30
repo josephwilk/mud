@@ -1,10 +1,6 @@
 (ns mud.chords
   (:use mud.core))
 
-(defn chord-ctl
-  "Like `ctl` but for chord groups (multiple synths)"
-  [chord-group & args] (doseq [synth (:synths chord-group)] (apply ctl synth args)))
-
 (defn chord-pattern
   "Write a pattern with list of notes to the buffers specified.
   Useful when creating chords and hence running multiple instances of synths
@@ -15,19 +11,19 @@
       (pattern! (nth chord-bufs chord-idx) (map #(if (> (count %1) chord-idx) (nth %1 chord-idx) 0) pattern))))
   pattern)
 
-(def chord-synth-buffer-cache (atom []))
+(def _chord-synth-buffer-cache_ (atom []))
 
 (defn chord-synth [synth-name chord-size & args]
   "Create multiple instances of a synth so we can easily play chords"
   (let [chord-bufs (map (fn [_] (buffer 256 "chord note buf")) (range 0 chord-size))
         synth-instances (doall (map (fn [b] (apply synth-name (concat args [:note-buf b]))) chord-bufs))]
-    (swap! chord-synth-buffer-cache concat chord-bufs )
+    (swap! _chord-synth-buffer-cache_ concat chord-bufs )
     (with-meta
       {:bufs chord-bufs :synths synth-instances}
       {:type ::chord-group})))
 
-(defn stop-all-chord-synth-buffers [] (doseq [buf @chord-synth-buffer-cache] (buffer-free buf))
-  (reset! chord-synth-buffer-cache []))
+(defn stop-all-chord-synth-buffers [] (doseq [buf @_chord-synth-buffer-cache_] (buffer-free buf))
+  (reset! _chord-synth-buffer-cache_ []))
 
 (defn note-in-chords
   "Fetch the `pos` note in every chord defined by `note` and `scale`"
