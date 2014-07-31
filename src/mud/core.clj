@@ -1,8 +1,13 @@
 (ns mud.core
   (:use overtone.live)
-  (:require [mud.timing :as time]))
+  (:require [mud.timing :as time]
+            [overtone.sc.machinery.server.comms :refer [with-server-self-sync server-sync]]))
 
 (def overtime-default-sleep 200)
+
+(defn set-beat
+  "Quickly set the timing rate on a synth."
+  [node rate] (ctl node :beat-trg-bus (:beat rate) :beat-bus (:count rate)))
 
 (defn pattern!
   "Fill a buffer repeating pattern if required.
@@ -19,6 +24,17 @@
      (when (= 0.0 (mod b n))
        (apply pattern! (concat [buf] lists))
        (remove-event-handler ::pattern-writer))) ::pattern-writer))
+
+(defn pattern-repeat!
+  [buf beat n & lists]
+  (on-trigger
+   (:trig-id beat)
+   (fn [b]
+     (when (= 0.0 (mod b n))
+       (apply pattern! (concat [buf] (map apply lists)))
+       )) ::pattern-repeat-writer))
+
+;;(remove-event-handler ::pattern-writer)
 
 (defn pattern-seq!
   "Fill a buffer repeating pattern if required. Support expressing patterns with `x` and `o`.
@@ -86,7 +102,9 @@
   ([node rate]
      (n-overtime! node :amp 1 0 rate)))
 
-(defn fadeout-master [] (n-overtime! (foundation-output-group) :master-volume 1 0 0.05))
+(defn fadeout-master
+  ([] (fadeout-master 1))
+  ([current] (n-overtime! (foundation-output-group) :master-volume current 0 0.05)))
 
 (def _ nil)
 (defn degrees
@@ -101,12 +119,28 @@
                  (+ root (degree->interval degree scale))
                  0)) ds))))
 
+(def _beat-trig-idx_ (atom 0))
+
+(defn one-time-beat-trigger
+  [beat beats func]
+  (on-trigger (:trig-id time/main-beat)
+              (fn [b] (when (= beat  (int (mod b beats)))
+                       (remove-event-handler ::one-time-beat-trigger)
+                       (func)))
+              ::one-time-beat-trigger))
+
 (defn on-beat-trigger [beat func]
+  (swap! _beat-trig-idx_ inc)
   (on-trigger (:trig-id time/main-beat)
               (fn [b] (when (= 0.0 (mod b beat))
-                       (func))) ::on-beat-trigger))
+                       (func))) (str "on-beat-trigger" @_beat-trig-idx_)))
 
 (defn remove-on-beat-trigger [] (remove-event-handler ::on-beat-trigger))
+
+(defn remove-all-beat-triggers []
+  (doseq [i (range 0 (inc @_beat-trig-idx_))]
+    (remove-event-handler (str "on-beat-trigger" i)))
+  (reset! _beat-trig-idx_ 0))
 
 (defn randomly-trigger
   ([change-fn] (randomly-trigger change-fn 0.5 8))
@@ -118,6 +152,26 @@
                     (when (and (= 0 (mod @random-counter at-beat))
                                (> (rand) chance)) (change-fn)))
                   ::beat-picker)))
+
+
+(def _sample-trig-idx_ (atom 0))
+(defn sample-trigger
+  ([start size sample-fn] (sample-trigger start size size sample-fn))
+  ([start offset size sample-fn]
+     (swap! _sample-trig-idx_ inc)
+     (on-trigger (:trig-id time/beat-1th)
+                 (fn [b]
+                   (when-let [beat (int (mod b size))]
+                     (when (= beat start)
+                       ;;(= beat (+ start (* (floor (/ beat offset)) offset)))
+
+                       (sample-fn))))
+                 (str "sample-trigger-" @_sample-trig-idx_))))
+
+(defn remove-all-sample-triggers []
+  (doseq [i (range 0 (inc @_sample-trig-idx_))]
+    (remove-event-handler (str "sample-trigger-" i)))
+    (reset! _sample-trig-idx_ 0))
 
 (defn stutter [rate]
   (future
