@@ -24,7 +24,7 @@ Everything you need to drive synths at beats
 
 ```clojure
 (use '[mud.core])
-(require `[mud.timing :as time])
+(require '[mud.timing :as time])
 
 ;;set the rate
 (ctl time/root-s :rate 8.)
