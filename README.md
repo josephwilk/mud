@@ -54,11 +54,13 @@ Everything you need to drive synths at beats
           [1 0 0 1 0 1 0])
 ```
 
-## Callbacks on beats
+## Callback on beats
 
 We can define callbacks in Clojure land firing on various beat events.
 
 ```clojure
+(defonce pulse-s (freesound-sample 194114))
+
 ;;Every 256 beat trigger sample
 (on-beat-trigger 256 #(mono-player pulse-s))
 
