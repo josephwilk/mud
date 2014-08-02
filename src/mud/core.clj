@@ -5,9 +5,12 @@
 
 (def overtime-default-sleep 200)
 
-(defn set-beat
+(defn ctl-beat
   "Quickly set the timing rate on a synth."
-  [node rate] (ctl node :beat-trg-bus (:beat rate) :beat-bus (:count rate)))
+  [node rate]
+  (if (sequential? node)
+    (doseq [n node] (ctl-beat n rate))
+    (ctl node :beat-trg-bus (:beat rate) :beat-bus (:count rate)))
 
 (defn pattern!
   "Fill a buffer repeating pattern if required.
@@ -54,6 +57,8 @@
   "For a synth instance node over time change val of `field` to end"
   ([node field start end] (n-overtime! node field start end 0.01))
   ([node field start end rate]
+    (if (sequential? node)
+      (doseq [n node] (n-overtime! n field start end rate))
       (letfn [(change-fn [val]  (if (< end start)
                                   (if (< (- val rate) end)
                                     end
