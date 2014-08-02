@@ -1,7 +1,6 @@
 (ns mud.timing
   (:use [overtone.live])
-  (:require
-   [overtone.synth.timing :as timing]))
+  (:require [overtone.synth.timing :as timing]))
 
 (defonce timing-g (group "mud timing" :tgt (foundation-safe-pre-default-group)))
 

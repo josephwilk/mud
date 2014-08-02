@@ -1,7 +1,7 @@
 (ns mud.core
-  (:use overtone.live)
+  (:use [overtone.live])
   (:require [mud.timing :as time]
-            [overtone.sc.machinery.server.comms :refer [with-server-self-sync server-sync]]))
+            [overtone.sc.machinery.server.comms :refer [with-server-self-sync server-sync]]))
 
 (def overtime-default-sleep 200)
 

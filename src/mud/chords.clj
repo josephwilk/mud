@@ -1,5 +1,6 @@
 (ns mud.chords
-  (:use mud.core))
+  (:use [mud.core]
+        [overtone.live]))
 
 (defn chord-pattern
   "Write a pattern with list of notes to the buffers specified.
