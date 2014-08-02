@@ -292,3 +292,8 @@
  (macroexpand
   '(defbufs 10 [repl electric])
   ))
+
+(defn full-stop []
+  (remove-all-beat-triggers)
+  (remove-all-sample-triggers)
+  (stop))
