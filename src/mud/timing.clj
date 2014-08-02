@@ -1,4 +1,4 @@
-(ns cassiopeia.engine.timing
+(ns mud.timing
   (:use [overtone.live])
   (:require
    [overtone.synth.timing :as timing]))
