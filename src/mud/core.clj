@@ -10,7 +10,7 @@
   [node rate]
   (if (sequential? node)
     (doseq [n node] (ctl-beat n rate))
-    (ctl node :beat-trg-bus (:beat rate) :beat-bus (:count rate)))
+    (ctl node :beat-trg-bus (:beat rate) :beat-bus (:count rate))))
 
 (defn pattern!
   "Fill a buffer repeating pattern if required.
@@ -71,7 +71,7 @@
             (Thread/sleep overtime-default-sleep)
             (ctl node field val)
             (when (not= val end)
-              (recur (change-fn val))))))))
+              (recur (change-fn val)))))))))
 
 (defn overtime!
   "Change an atom or a sequence of atoms to a `target` value at some `rate` of change.
