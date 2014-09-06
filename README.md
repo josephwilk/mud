@@ -78,7 +78,7 @@ We can define callbacks in Clojure land firing on various beat events.
 
 ;;Remove all registered triggers
 (remove-all-sample-triggers)
-(remove-all-beat-triggers
+(remove-all-beat-triggers)
  ```
 
 ### Chords
