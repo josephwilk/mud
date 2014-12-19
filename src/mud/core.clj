@@ -57,8 +57,12 @@
   "For a synth instance node over time change val of `field` to end"
   ([node field start end] (n-overtime! node field start end 0.01))
   ([node field start end rate]
-    (if (sequential? node)
-      (doseq [n node] (n-overtime! n field start end rate))
+     (cond
+      (and (map? node) (:synths node)) (n-overtime! (:synths node) field start end rate)
+
+      (sequential? node) (doseq [n node] (n-overtime! n field start end rate))
+
+      :else
       (letfn [(change-fn [val]  (if (< end start)
                                   (if (< (- val rate) end)
                                     end
@@ -83,6 +87,7 @@
   "
   ([thing target] (overtime! thing target 0.1))
   ([thing target rate]
+
      (let [things (if-not (vector? thing) [thing] thing)
            things-and-targets (map vector things (repeatedly #(if (fn? target) (target) target)))]
        (doseq [[thing target] things-and-targets]
