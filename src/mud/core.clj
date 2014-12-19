@@ -5,6 +5,8 @@
 
 (def overtime-default-sleep 200)
 
+(defn ctl-global-clock [rate] (ctl time/root-s :rate rate))
+
 (defn ctl-time
   "Quickly set the timing rate on a synth."
   [node rate]
