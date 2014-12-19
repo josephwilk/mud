@@ -5,11 +5,13 @@
 
 (def overtime-default-sleep 200)
 
-(defn ctl-beat
+(defn ctl-time
   "Quickly set the timing rate on a synth."
   [node rate]
-  (if (sequential? node)
-    (doseq [n node] (ctl-beat n rate))
+  (cond
+   (and (map? node) (:synths node)) (ctl-beat (:synths node))
+   (sequential? node) (doseq [n node] (ctl-beat n rate))
+   :else
     (ctl node :beat-trg-bus (:beat rate) :beat-bus (:count rate))))
 
 (defn pattern!
