@@ -11,7 +11,7 @@
   "Quickly set the timing rate on a synth."
   [node rate]
   (cond
-   (and (map? node) (:synths node)) (ctl-time (:synths node))
+   (and (map? node) (:synths node)) (ctl-time (:synths node) rate)
    (sequential? node) (doseq [n node] (ctl-time n rate))
    :else
     (ctl node :beat-trg-bus (:beat rate) :beat-bus (:count rate))))
