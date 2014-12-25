@@ -124,7 +124,7 @@
 (defn degrees
   "Convert degrees into pitches. If degree > 7 will automatically move to the next
    octave degree."
-  ([ds] (degrees ds :major :A3))
+  ([ds]   (degrees ds :major :A3))
   ([ds n] (degrees ds :major n))
   ([ds scale n]
       (let [root (note n)]
@@ -136,7 +136,7 @@
 (defn degrees-seq
   "A conciser way to express cross root degrees
   Example: (degrees-seq [1 3 1 4 :F4 6 7 :C3 7 7 :F3] :minor)"
-  [notes scale]
+  [scale notes]
   (mapcat (fn [[score [root]]] (degrees score :minor root))
           (partition 2 (partition-by keyword? notes))))
 
