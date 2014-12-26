@@ -52,19 +52,19 @@
             (chords-for note scale no-notes)))))
 
 (defn chord-seq
-  "Example (chord-seq :minor [1 :3c :4a :F2])"
+  "Example (chord-seq :minor [:F2 1 :3c :4a :F3 1 1])"
   [scale chords]
-  (mapcat (fn [[degs [s]]]
+  (mapcat (fn [[[root] degs]]
             (map (fn [d]
-                   (let [[deg inversions] (if (integer? d) [d "a"] (clojure.string/split (str (name d)) #""))
-                         deg              (if (integer? deg) deg (Integer. (re-find  #"\d+" deg)))
+                   (let [[deg inversions] (if (integer? d) [(str d) "a"] (clojure.string/split (str (name d)) #""))
+                         deg  (Integer. (re-find  #"\d+" deg))
                          invert (case inversions
                                   "a" nil
                                   "b" [1]
                                   "c" [1 2])]
                      (if invert
-                       (nth (chords-with-inversion invert s scale 3) (- deg 1))
-                       (nth (chords-for s scale 3) (- deg 1))))) degs))
+                       (nth (chords-with-inversion invert root scale 3) (- deg 1))
+                       (nth (chords-for root scale 3) (- deg 1))))) degs))
           (partition 2 (partition-by #(not
                                        (if (integer? %)
                                          true
