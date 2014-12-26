@@ -120,6 +120,16 @@ Writing patterns to buffers. Using many different musical notations.
 (pattern-repeat! 8 notes-buf #(degrees (shuffle [5 3 7]) :minor :F3))
 ```
 
+### Fast composition of Chords and degrees
+
+Make it easier to write a score, when switching of scales/chords
+
+```clojure
+(degrees-seq :minor [:F3 1 6 1 4 :F2 1 1 :C3 1 1])
+
+(chords-seq :minor [:F3 1 :6b :1c 4 :sus4 :sus4*2])
+```
+
 ## Goals
 
 * Its centered around using Supercollider for timing rather than Java.
