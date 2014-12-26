@@ -135,9 +135,10 @@
 
 (defn degrees-seq
   "A conciser way to express cross root degrees
-  Example: (degrees-seq [1 3 1 4 :F4 6 7 :C3 7 7 :F3] :minor)"
+  Example: (degrees-seq :minor [:F4 1 3 1 4 :C3 6 7 :F3 7 7])"
   [scale notes]
-  (mapcat (fn [[score [root]]] (degrees score :minor root))
+  (mapcat (fn [[[root] score]]
+            (degrees score scale root))
           (partition 2 (partition-by keyword? notes))))
 
 (def _beat-trig-idx_ (atom 0))
