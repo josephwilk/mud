@@ -53,7 +53,8 @@
 
 
 (defn chord-seq
-  "Example:
+  "A concise way to express many chords.
+  Example:
   (chord-seq :minor [:F2 :3c*6 1 :2b :3c :F3 :sus4])"
   [scale chords]
   (mapcat
