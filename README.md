@@ -100,9 +100,21 @@ Use a single synth/inst def to play chords.
 (ctl (:synths singing-chord-group-g) :amp 0.2)
 ```
 
+### Fast composition of Chords and degrees
+
+Make it easier to write a score, when switching of scales/chords
+
+```clojure
+(degrees-seq :minor [:F3 1 6 1 4 :F2 1 1 :C3 1 1])
+
+;;b first inversion, c second inversion, etc.
+;; :sus4*2 is a shortcut for [:sus4 :sus4]
+(chords-seq :minor [:F3 1 :6b :1c 4 :sus4 :sus4*2])
+```
+
 ### Patterns
 
-Writing patterns to buffers. Using many different musical notations.
+Writing patterns to buffers.
 
 ```clojure
 (use '[mud.core])
@@ -118,18 +130,6 @@ Writing patterns to buffers. Using many different musical notations.
 
 ;;Keep writing a pattern every nth beat.
 (pattern-repeat! 8 notes-buf #(degrees (shuffle [5 3 7]) :minor :F3))
-```
-
-### Fast composition of Chords and degrees
-
-Make it easier to write a score, when switching of scales/chords
-
-```clojure
-(degrees-seq :minor [:F3 1 6 1 4 :F2 1 1 :C3 1 1])
-
-;;b first inversion, c second inversion, etc.
-;; :sus4*2 is a shortcut for [:sus4 :sus4]
-(chords-seq :minor [:F3 1 :6b :1c 4 :sus4 :sus4*2])
 ```
 
 ## Goals
