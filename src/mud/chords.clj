@@ -67,10 +67,11 @@
                      multipler (Integer. (re-find  #"\d+" multipler))]
                  (chords-seq scale (concat [root] (repeat multipler (keyword deg)))))
 
-               (or (integer? current-chord) (re-find #"^\d[abc]+$" current-chord))
+               (or (integer? current-chord) (re-find #"^\d[abc]*$" current-chord))
                (let [[deg inversions] (if (integer? current-chord) [(str current-chord) "a"] (clojure.string/split current-chord #""))
                      deg (Integer. (re-find  #"\d+" deg))
                      invert (case inversions
+                              nil nil
                               "a" nil
                               "b" [1]
                               "c" [1 2])]
