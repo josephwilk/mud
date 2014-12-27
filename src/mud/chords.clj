@@ -94,6 +94,6 @@
                   degs))
            (partition 2 (partition-by #(not (if (integer? %)
                                               true
-                                              (or (re-find #"sus|m\+5|m7" (str (name %)))
+                                              (or (re-find #"sus|m\+5|m7\+5" (str (name %)))
                                                   (re-find #"^\d" (str (name %))))))
                                       chords)))))
