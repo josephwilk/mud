@@ -52,7 +52,7 @@
             (chords-for note scale no-notes)))))
 
 
-(defn chord-seq
+(defn chords-seq
   "A concise way to express many chords.
   Example:
   (chord-seq :minor [:F2 :3c*6 1 :2b :3c :F3 :sus4])"
@@ -65,7 +65,7 @@
                (and (not (integer? current-chord)) (re-find #"\*" current-chord))
                (let [[deg multipler] (clojure.string/split current-chord #"\*")
                      multipler (Integer. (re-find  #"\d+" multipler))]
-                 (chord-seq scale (concat [root] (repeat multipler (keyword deg)))))
+                 (chords-seq scale (concat [root] (repeat multipler (keyword deg)))))
 
                (or (integer? current-chord) (re-find #"^\d[abc]+$" current-chord))
                (let [[deg inversions] (if (integer? current-chord) [(str current-chord) "a"] (clojure.string/split current-chord #""))
