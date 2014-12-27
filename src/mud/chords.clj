@@ -54,7 +54,8 @@
 (defn chords-seq
   "A concise way to express many chords.
   Example:
-  (chords-seq :minor [:F2 :3c*2 :7sus4c*4])"
+  (chords-seq :minor [:F2 :3c*2 :7sus4c*4])
+  (chords-seq :minor [:F3 :m+5*8])"
   [scale chords]
   (reduce (fn [accu x] (if (sequential? (first x)) (apply conj accu (vec x)) (conj accu (vec x)))) []
           (mapcat
@@ -89,12 +90,10 @@
                                         "b" 1
                                         "c" 2)]
                            (chord root (keyword chd) invert))
-                         (chord root (keyword current-chord))
-                         )
-                       )))
+                         (chord root (keyword current-chord))))))
                   degs))
            (partition 2 (partition-by #(not (if (integer? %)
                                               true
-                                              (or (re-find #"sus" (str (name %)))
+                                              (or (re-find #"sus|m\+5|m7" (str (name %)))
                                                   (re-find #"^\d" (str (name %))))))
                                       chords)))))
