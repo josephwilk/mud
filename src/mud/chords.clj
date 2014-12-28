@@ -51,49 +51,57 @@
                inversions))
             (chords-for note scale no-notes)))))
 
+
+(defn- chord->midi-notes [scale root current-chord]
+  (let [current-chord (if (keyword? current-chord) (str (name current-chord)) current-chord)]
+    (cond
+     (and (not (integer? current-chord)) (re-find #"\*" current-chord))
+     (let [[deg multipler] (clojure.string/split current-chord #"\*")
+           multipler (Integer. (re-find  #"\d+" multipler))]
+       (chords-seq scale (concat [root] (repeat multipler (keyword deg)))))
+
+     (or (integer? current-chord) (re-find #"^\d[abc]*$" current-chord))
+     (let [[deg inversions] (if (integer? current-chord) [(str current-chord) "a"] (clojure.string/split current-chord #""))
+           deg (Integer. (re-find  #"\d+" deg))
+           invert (case inversions
+                    nil nil
+                    "a" nil
+                    "b" [1]
+                    "c" [1 2])]
+       (if invert
+         (nth (chords-with-inversion invert root scale 3) (- deg 1))
+         (nth (chords-for root scale 3) (- deg 1))))
+
+     :else
+     (if (re-find #"[abc]+$" current-chord)
+       (let [inversions  (str (last current-chord))
+             chd (clojure.string/join (butlast current-chord))
+             invert (case inversions
+                      nil 0
+                      "a" 0
+                      "b" 1
+                      "c" 2)]
+         (chord root (keyword chd) invert))
+       (chord root (keyword current-chord))))))
+
+(defn root? [phrase]
+  (not (if (integer? phrase)
+         true
+         (or (re-find #"sus|m\+5|m7\+5" (str (name phrase)))
+             (re-find #"^\d" (str (name phrase)))))))
+
 (defn chords-seq
   "A concise way to express many chords.
   Example:
   (chords-seq :minor [:F2 :3c*2 :7sus4c*4])
   (chords-seq :minor [:F3 :m+5*8])"
   [scale chords]
-  (reduce (fn [accu x] (if (sequential? (first x)) (apply conj accu (vec x)) (conj accu (vec x)))) []
-          (mapcat
-           (fn [[[root] degs]]
-             (map (fn [current-chord]
-                    (let [current-chord (if (keyword? current-chord) (str (name current-chord)) current-chord)]
-                      (cond
-                       (and (not (integer? current-chord)) (re-find #"\*" current-chord))
-                       (let [[deg multipler] (clojure.string/split current-chord #"\*")
-                             multipler (Integer. (re-find  #"\d+" multipler))]
-                         (chords-seq scale (concat [root] (repeat multipler (keyword deg)))))
-
-                       (or (integer? current-chord) (re-find #"^\d[abc]*$" current-chord))
-                       (let [[deg inversions] (if (integer? current-chord) [(str current-chord) "a"] (clojure.string/split current-chord #""))
-                             deg (Integer. (re-find  #"\d+" deg))
-                             invert (case inversions
-                                      nil nil
-                                      "a" nil
-                                      "b" [1]
-                                      "c" [1 2])]
-                         (if invert
-                           (nth (chords-with-inversion invert root scale 3) (- deg 1))
-                           (nth (chords-for root scale 3) (- deg 1))))
-
-                       :else
-                       (if (re-find #"[abc]+$" current-chord)
-                         (let [inversions  (str (last current-chord))
-                               chd (clojure.string/join (butlast current-chord))
-                               invert (case inversions
-                                        nil 0
-                                        "a" 0
-                                        "b" 1
-                                        "c" 2)]
-                           (chord root (keyword chd) invert))
-                         (chord root (keyword current-chord))))))
-                  degs))
-           (partition 2 (partition-by #(not (if (integer? %)
-                                              true
-                                              (or (re-find #"sus|m\+5|m7\+5" (str (name %)))
-                                                  (re-find #"^\d" (str (name %))))))
-                                      chords)))))
+  (if-not (string? chords)
+    (reduce
+     (fn [accu x] (if (sequential? (first x)) (apply conj accu (vec x)) (conj accu (vec x))))
+     []
+     (mapcat
+      (fn [[[root] degs]]
+        (map #(chord->midi-notes scale root %) degs))
+      (partition 2 (partition-by root? chords))))
+    (recur scale (clojure.string/split chords #" "))))
