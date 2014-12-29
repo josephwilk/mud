@@ -51,14 +51,13 @@
                inversions))
             (chords-for note scale no-notes)))))
 
-
 (defn- chord->midi-notes [scale root current-chord]
   (let [current-chord (if (keyword? current-chord) (str (name current-chord)) current-chord)]
     (cond
      (and (not (integer? current-chord)) (re-find #"\*" current-chord))
      (let [[deg multipler] (clojure.string/split current-chord #"\*")
            multipler (Integer. (re-find  #"\d+" multipler))]
-       (chords-seq scale (concat [root] (repeat multipler (keyword deg)))))
+       (repeat multipler (chord->midi-notes scale root (keyword deg))))
 
      (or (integer? current-chord) (re-find #"^\d[abc]*$" current-chord))
      (let [[deg inversions] (if (integer? current-chord) [(str current-chord) "a"] (clojure.string/split current-chord #""))
