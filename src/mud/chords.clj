@@ -104,4 +104,4 @@
         (map #(chord->midi-notes scale root %) degs))
       (partition 2 (partition-by root? chords))))
     (recur scale
-           (clojure.string/replace (clojure.string/split chords #"\s+") "\n|\t" " "))))
+           (clojure.string/split (clojure.string/replace chords "\n|\t" " ") #"\s+") )))
