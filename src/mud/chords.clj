@@ -93,8 +93,11 @@
   (let [in (clojure.string/replace in "\n|\t" " ")
         multipliers (re-seq #"\[([^\]])\]\*(/d+)" in)
         multi-replacements (map (fn [[pattern multipler]] (map #(str %1 "*" multipler) (tokenise pattern)) multipliers)
-        in (reduce (fn [[pattern multipler] accum] (clojure.string/replace (str "[" pattern "]*" multipler) "TEST" ) "" multipliers)
-]
+        in (reduce 
+             (fn [[[pattern multipler] replacement] accum] 
+               (clojure.string/replace accum (str "[" pattern "]*" multipler) (clojure.string/join replacement " ")) 
+              in 
+              (map vector multipliers multi-replacements))]
     (clojure.string/split in #"\s+"))))
 
 (defn chords-seq
