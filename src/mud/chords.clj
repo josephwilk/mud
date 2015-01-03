@@ -109,13 +109,14 @@
   (chords-seq :minor [:F2 :3c*2 :7sus4c*4])
   (chords-seq :minor [:F3 :m+5*8])
   (chords-seq :minor \"F3 [1c 2]*8 4b*6\")"
-  [scale chords]
+  [chords & [scale]]
   (if-not (string? chords)
     (reduce
      (fn [accu x] (if (sequential? (first x)) (apply conj accu (vec x)) (conj accu (vec x))))
      []
      (mapcat
       (fn [[[root] degs]]
-        (map #(chord->midi-notes scale root %) degs))
+        (let [scale (if (Character/isUpperCase (first root)) :major :minor)]
+          (map #(chord->midi-notes scale root %) degs)))
       (partition 2 (partition-by root? chords))))
     (recur scale (tokenise chords))))
