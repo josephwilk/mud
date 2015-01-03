@@ -89,16 +89,19 @@
          (or (re-find #"sus|m\+5|m7\+5" (str (name phrase)))
              (re-find #"^\d" (str (name phrase)))))))
 
-(defn tokenise [in]
+(defn- tokenise [in]
+  "(tokenise )"
   (let [in (clojure.string/replace in "\n|\t" " ")
-        multipliers (re-seq #"\[([^\]])\]\*(/d+)" in)
-        multi-replacements (map (fn [[pattern multipler]] (map #(str %1 "*" multipler) (tokenise pattern)) multipliers)
-        in (reduce 
-             (fn [[[pattern multipler] replacement] accum] 
-               (clojure.string/replace accum (str "[" pattern "]*" multipler) (clojure.string/join replacement " ")) 
-              in 
-              (map vector multipliers multi-replacements))]
-    (clojure.string/split in #"\s+"))))
+        multipliers (re-seq #"\[([^\]]+)\]\*(\d+)" in)
+        multi-replacements (map (fn [[_ pattern multipler]] (map #(str %1 "*" multipler) (clojure.string/split pattern #"\s+"))) multipliers)
+        _      (println :repl                (map vector multipliers multi-replacements))
+        in (reduce
+            (fn [accum [[original pattern multipler] replacement]]
+              (clojure.string/replace accum original (clojure.string/join " " replacement)))
+            in
+            (map vector multipliers multi-replacements))]
+    (println :pattern in)
+    (clojure.string/split in #"\s+")))
 
 (defn chords-seq
   "A concise way to express many chords.
@@ -115,4 +118,4 @@
       (fn [[[root] degs]]
         (map #(chord->midi-notes scale root %) degs))
       (partition 2 (partition-by root? chords))))
-    (recur scale (tokenise chords)))
+    (recur scale (tokenise chords))))
