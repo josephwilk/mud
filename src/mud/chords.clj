@@ -90,33 +90,38 @@
              (re-find #"^\d" (str (name phrase)))))))
 
 (defn- tokenise [in]
-  "(tokenise )"
   (let [in (clojure.string/replace in "\n|\t" " ")
         multipliers (re-seq #"\[([^\]]+)\]\*(\d+)" in)
         multi-replacements (map (fn [[_ pattern multipler]] (map #(str %1 "*" multipler) (clojure.string/split pattern #"\s+"))) multipliers)
-        _      (println :repl                (map vector multipliers multi-replacements))
         in (reduce
             (fn [accum [[original pattern multipler] replacement]]
               (clojure.string/replace accum original (clojure.string/join " " replacement)))
             in
             (map vector multipliers multi-replacements))]
-    (println :pattern in)
+    (println :pattern     (clojure.string/split in #"\s+"))
     (clojure.string/split in #"\s+")))
 
 (defn chords-seq
   "A concise way to express many chords.
+  * `F1 2` Set a chord root before degrees/chords
+  * `F2 1 2 3 4 5 6 7 8` 1-9 chord degrees
+  * `F2 1a 2b 3c` a/b/c inversions 1st, 2nd & 3rd
+  * `F3 1b*8` repeat chord n times
+  * `F3 [1b 2b 1 2]*8` Repeat a bunch of chords n times
+
   Example:
-  (chords-seq :minor [:F2 :3c*2 :7sus4c*4])
-  (chords-seq :minor [:F3 :m+5*8])
-  (chords-seq :minor \"F3 [1c 2]*8 4b*6\")"
+  (chords-seq [:F2 :3c*2 :7sus4c*4] :minor)
+  (chords-seq [:F3 :m+5*8] :minor)
+  (chords-seq \"F3 [1c 2]*8 4b*6\" :minor)
+  (chords-seq \"F3 [1c 2]*8 4b*6\")"
   [chords & [scale]]
-  (if-not (string? chords)
+  (if (string? chords)
+    (recur (tokenise chords) [scale])
     (reduce
      (fn [accu x] (if (sequential? (first x)) (apply conj accu (vec x)) (conj accu (vec x))))
      []
      (mapcat
       (fn [[[root] degs]]
-        (let [scale (if (Character/isUpperCase (first root)) :major :minor)]
+        (let [scale (or scale (if (Character/isUpperCase (get root 0)) :major :minor))]
           (map #(chord->midi-notes scale root %) degs)))
-      (partition 2 (partition-by root? chords))))
-    (recur scale (tokenise chords))))
+      (partition 2 (partition-by root? chords))))))
