@@ -105,11 +105,16 @@ Use a single synth/inst def to play chords.
 Make it easier to write a score, when switching of scales/chords
 
 ```clojure
-(degrees-seq :minor [:F3 1 6 1 4 :F2 1 1 :C3 1 1])
+(degrees-seq [:f3 1 6 1 4 :F2 1 1 :C3 1 1]) ;;Lowercase -> minor
+                                            ;;Uppercase -> major
 
 ;;b first inversion, c second inversion, etc.
 ;; :sus4*2 is a shortcut for [:sus4 :sus4]
-(chords-seq :minor [:F3 1 :6b :1c 4 :sus4 :sus4*2])
+(chords-seq [:F3 1 :6b :1c 4 :sus4 :sus4*2])
+
+;;Repeat a group of chords n times. Group is surronded by `[]`
+;; Also pass a string rather than an array.
+(chords-seq "F3 [1 6b 1c 4 sus4]*8 sus4*2")
 ```
 
 ### Patterns

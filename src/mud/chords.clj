@@ -109,7 +109,7 @@
   * `F3 1b*8` repeat chord n times
   * `F3 [1b 2b 1 2]*8` Repeat a bunch of chords n times
 
-  Example:
+  Examples:
   (chords-seq [:F2 :3c*2 :7sus4c*4] :minor)
   (chords-seq [:F3 :m+5*8] :minor)
   (chords-seq \"F3 [1c 2]*8 4b*6\" :minor)
