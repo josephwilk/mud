@@ -89,11 +89,18 @@
          (or (re-find #"sus|m\+5|m7\+5" (str (name phrase)))
              (re-find #"^\d" (str (name phrase)))))))
 
+(defn tokenise [in]
+  (let [in (clojure.string/replace in "\n|\t" " ")
+        multipliers (re-seq #"\[([^\]])\]\*(/d+)" in)
+        multi-replacements (map (fn [[pattern multipler]] (map #(str %1 "*" multipler) (tokenise pattern)) multipliers)]
+    (clojure.string/split in #"\s+"))))
+
 (defn chords-seq
   "A concise way to express many chords.
   Example:
   (chords-seq :minor [:F2 :3c*2 :7sus4c*4])
-  (chords-seq :minor [:F3 :m+5*8])"
+  (chords-seq :minor [:F3 :m+5*8])
+  (chords-seq :minor \"F3 [1c 2]*8 4b*6\")"
   [scale chords]
   (if-not (string? chords)
     (reduce
@@ -103,5 +110,4 @@
       (fn [[[root] degs]]
         (map #(chord->midi-notes scale root %) degs))
       (partition 2 (partition-by root? chords))))
-    (recur scale
-           (clojure.string/split (clojure.string/replace chords "\n|\t" " ") #"\s+") )))
+    (recur scale (tokenise chords)))
