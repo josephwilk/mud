@@ -151,7 +151,11 @@
      (fn [[[root] score]]
        (let [scale (or scale (if (Character/isUpperCase (get (name root) 0)) :major :minor))]
          (degrees score scale root)))
-     (partition 2 (partition-by #(or (keyword? %1) (re-find #"(?i)^[ABCDEFG]" %1)) notes)))))
+     (partition 2 (partition-by #(or (keyword? %1) (re-find #"(?i)^[ABCDEFG]" %1)) 
+                (reduce (fn [accum pattern] 
+                  (if (and (integer? pattern) (> pattern 9))
+                    (map #(Integer/parseInt (re-find #"\A-?\d+" %1)) (clojure.string/split #"" (str pattern)) 
+                    notes))))))))
 
 (def _beat-trig-idx_ (atom 0))
 
