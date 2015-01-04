@@ -122,6 +122,6 @@
      []
      (mapcat
       (fn [[[root] degs]]
-        (let [scale (or scale (if (Character/isUpperCase (get root 0)) :major :minor))]
+        (let [scale (or scale (if (Character/isUpperCase (get (name root) 0)) :major :minor))]
           (map #(chord->midi-notes scale root %) degs)))
       (partition 2 (partition-by root? chords))))))
