@@ -138,7 +138,9 @@
   Examples:
   (degrees-seq [:F4 1 3 1 4 :C3 6 7 :F3 7 7] :minor)
   (degrees-seq [:F4 1 3 1 4 :C3 6 7 :F3 7 7]) ;; Uppercase == major
-  (degrees-seq [:f4 1 3 1 4])                 ;; Lowercase == minor"
+  (degrees-seq [:f4 1 3 1 4])                 ;; Lowercase == minor
+  (degrees-seq \"F3 1314 C2 141456\")"
+
   [notes & [scale]]
   (if (string? notes)
     (recur (->> notes 
