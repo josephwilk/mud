@@ -140,25 +140,31 @@
   (degrees-seq [:F4 1314 :C3 67 :F3 77] :minor)
 
   (degrees-seq [:F4 1 3 1 4 :C3 6 7 :F3 7 7]) ;; Uppercase == major
-  (degrees-seq [:f4 1 3 1 4])                 ;; Lowercase == minor
+  (degrees-seq [:f4 1 3 1 4])                 ;; Lowercase == minor`
   (degrees-seq \"F3 1314 C2 141456\")"
   [notes & [scale]]
   (if (string? notes)
-    (recur (->> notes
-               (clojure.string/replace #"\s+" "")
-               (re-seq #"(\w\d|\d)"))
+    (recur (->> (clojure.string/replace  notes #"\s+" "")
+                (re-seq #"(\D\d|\d)")
+                (map last))
            scale)
     (mapcat
      (fn [[[root] score]]
        (let [scale (or scale (if (Character/isUpperCase (get (name root) 0)) :major :minor))]
          (degrees score scale root)))
-     (partition 2 (partition-by #(or (keyword? %1) (re-find #"(?i)^[ABCDEFG]" (str %1)))
-                                (reduce (fn [accum pattern]
-                                          (if (and (integer? pattern) (> pattern 9))
-                                            (concat accum
-                                                    (map #(Integer/parseInt (str %1)) (clojure.string/split (str pattern) #"")))
-                                            (concat [pattern] accum)))
-                                        [] notes))))))
+     (partition 2 (partition-by
+                   #(or (keyword? %1) (re-find #"(?i)^[ABCDEFG]" (str %1)))
+                   (reduce (fn [accum pattern]
+                             (cond
+                              (and (integer? pattern) (> pattern 9))
+                              (concat accum
+                                      (map #(Integer/parseInt (str %1)) (clojure.string/split (str pattern) #"")))
+                              (and (string? pattern) (re-find #"^[1-9]" pattern))
+                              (concat accum [(Integer/parseInt pattern)])
+
+                              :else
+                              (concat accum [pattern])))
+                           [] notes))))))
 
 (def _beat-trig-idx_ (atom 0))
 
