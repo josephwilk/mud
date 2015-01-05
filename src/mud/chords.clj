@@ -91,8 +91,8 @@
 
 (defn- tokenise [in]
   (let [in (-> in
-               (clojure.string/replace in #"\s*\[" " [")
-               (clojure.string/replace in "\n|\t" " "))
+               (clojure.string/replace #"\s*\[" " [")
+               (clojure.string/replace "\n|\t" " "))
         multipliers (re-seq #"\[([^\]]+)\]\*(\d+)" in)
         multi-replacements (map (fn [[_ pattern multipler]]
                                   (let [p (map last (re-seq #"(7sus4[a-c]*|sus4[a-c]*|\d[a-c]*|(?<!/*)\d)" pattern))
