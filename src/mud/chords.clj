@@ -90,15 +90,20 @@
              (re-find #"^\d" (str (name phrase)))))))
 
 (defn- tokenise [in]
-  (let [in (clojure.string/replace in "\n|\t" " ")
+  (let [in (-> in
+               (clojure.string/replace in #"\s*\[" " [")
+               (clojure.string/replace in "\n|\t" " "))
         multipliers (re-seq #"\[([^\]]+)\]\*(\d+)" in)
-        multi-replacements (map (fn [[_ pattern multipler]] (map #(str %1 "*" multipler) (clojure.string/split pattern #"\s+"))) multipliers)
+        multi-replacements (map (fn [[_ pattern multipler]]
+                                  (let [p (map last (re-seq #"(7sus4[a-c]*|sus4[a-c]*|\d[a-c]*|(?<!/*)\d)" pattern))
+                                        p (mapcat #(clojure.string/split %1 #"\s+") p)]
+                                    (map #(str %1 "*" multipler) p))) multipliers)
         in (reduce
             (fn [accum [[original pattern multipler] replacement]]
               (clojure.string/replace accum original (clojure.string/join " " replacement)))
             in
             (map vector multipliers multi-replacements))]
-    (println :pattern     (clojure.string/split in #"\s+"))
+    (println :pattern  (clojure.string/split in #"\s+"))
     (clojure.string/split in #"\s+")))
 
 (defn chords-seq
