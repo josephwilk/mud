@@ -158,7 +158,10 @@
                              (cond
                               (and (integer? pattern) (> pattern 9))
                               (concat accum
-                                      (map #(Integer/parseInt (str %1)) (clojure.string/split (str pattern) #"")))
+                                      (map #(Integer/parseInt (str %1))
+                                           (remove clojure.string/blank?
+                                                   (clojure.string/split (str pattern) #""))))
+
                               (and (string? pattern) (re-find #"^[1-9]" pattern))
                               (concat accum [(Integer/parseInt pattern)])
 
