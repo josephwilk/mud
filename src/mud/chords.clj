@@ -61,7 +61,7 @@
 
      (or (integer? current-chord) (re-find #"^\d[abc]*$" current-chord))
      (let [[deg inversions] (if (or (integer? current-chord)
-                                    (re-find #"\d+" current-chord)) [(str current-chord) "a"] (clojure.string/split current-chord #""))
+                                    (re-find #"^\d+$" current-chord)) [(str current-chord) "a"] (remove clojure.string/blank? (clojure.string/split current-chord #"")))
            deg (Integer. (re-find  #"\d+" deg))
            invert (case inversions
                     nil nil
