@@ -96,7 +96,7 @@
                (clojure.string/replace "\n|\t" " "))
         multipliers (re-seq #"\[([^\]]+)\]\*(\d+)" in)
         multi-replacements (map (fn [[_ pattern multipler]]
-                                  (let [p (map last (re-seq #"(7sus4[a-c]*|sus4[a-c]*|\d[a-c]*|(?<!/*)\d)" pattern))
+                                  (let [p (map last (re-seq #"(m7\+5|m\+5|7sus4[a-c]*|sus4[a-c]*|\d[a-c]*|(?<!/*)\d)" pattern))
                                         p (mapcat #(clojure.string/split %1 #"\s+") p)]
                                     (map #(str %1 "*" multipler) p))) multipliers)
         in (reduce
