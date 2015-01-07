@@ -1,5 +1,6 @@
 (ns mud.t-mud
-  (:use [mud.core][mud.chords][midje.sweet][overtone.live]))
+  (:use [mud.core][mud.chords][midje.sweet]
+        [overtone.music.pitch]))
 
 (facts "degrees-seq"
   (fact "as a list or string"
@@ -56,7 +57,11 @@
     (chords-seq "b2 sus4c 7sus4b m+5a m7+5b") => [(invert-chord (chord :b2 :sus4) 2)
                                                   (invert-chord (chord :b2 :7sus4) 1)
                                                   (invert-chord (chord :b2 :m+5) 0)
-                                                  (invert-chord (chord :b2 :m7+5) 1)]))
+                                                  (invert-chord (chord :b2 :m7+5) 1)])
+
+  (fact "repeat `[]` without any arity"
+    (chords-seq "f2 [1a 2b]") => (chords-seq "f2 [1a 2b]*1"))
+)
 
 (fact "chords with inversions"
   (nth (chords-with-inversion [] :b3 :minor 3) 0) =>  (chord-degree :i :b3 :minor 3)
