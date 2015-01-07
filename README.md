@@ -108,7 +108,7 @@ Make it easier to write a score, when switching of scales/chords
 (degrees-seq [:f3 1 6 1 4 :F2 1 1 :C3 1 1]) ;;Lowercase -> minor
                                             ;;Uppercase -> major
 
-;;b first inversion, c second inversion, etc.
+;;a first inversion, b second inversion, etc.
 ;; :sus4*2 is a shortcut for [:sus4 :sus4]
 (chords-seq [:F3 1 :6b :1c 4 :sus4 :sus4*2])
 

@@ -38,26 +38,26 @@
 
     (chords-seq [:b3 :m+5*4]) => [(chord :b3 :m+5) (chord :b3 :m+5) (chord :b3 :m+5) (chord :b3 :m+5)]
 
-    (chords-seq "b3[1c 2]*2 4b*3") => [(nth (chords-with-inversion [1 2] :b3 :minor 3) 0)
-                                       (nth (chords-with-inversion [1 2] :b3 :minor 3) 0)
+    (chords-seq "b3[1c 2]*2 4b*3") => [(invert-chord (chord-degree :i :b3 :minor 3) 3)
+                                       (invert-chord (chord-degree :i :b3 :minor 3) 3)
                                        (chord-degree :ii :b3 :minor 3) (chord-degree :ii :b3 :minor 3)
-                                       (nth (chords-with-inversion [1] :b3 :minor 3) 3)
-                                       (nth (chords-with-inversion [1] :b3 :minor 3) 3)
-                                       (nth (chords-with-inversion [1] :b3 :minor 3) 3)])
+                                       (nth (chords-with-inversion [1 2] :b3 :minor 3) 3)
+                                       (nth (chords-with-inversion [1 2] :b3 :minor 3) 3)
+                                       (nth (chords-with-inversion [1 2] :b3 :minor 3) 3)])
 
   (fact "squished [] patterns"
     (map
      sort
-     (chords-seq "b2[1c2b3sus4b]*2")) => [(invert-chord (chord-degree :i :b2 :minor 3) 2) (invert-chord (chord-degree :i :b2 :minor 3) 2)
-                                          (invert-chord (chord-degree :ii :b2 :minor 3) 1) (invert-chord (chord-degree :ii :b2 :minor 3) 1)
+     (chords-seq "b2[1c2b3sus4b]*2")) => [(invert-chord (chord-degree :i :b2 :minor 3) 3) (invert-chord (chord-degree :i :b2 :minor 3) 3)
+                                          (invert-chord (chord-degree :ii :b2 :minor 3) 2) (invert-chord (chord-degree :ii :b2 :minor 3) 2)
                                           (invert-chord (chord-degree :iii :b2 :minor 3) 0) (invert-chord (chord-degree :iii :b2 :minor 3) 0)
-                                          (invert-chord (chord :b2 :sus4) 1) (invert-chord (chord :b2 :sus4) 1)])
+                                          (invert-chord (chord :b2 :sus4) 2) (invert-chord (chord :b2 :sus4) 2)])
 
   (fact "with a pattern with funky chords"
-    (chords-seq "b2 sus4c 7sus4b m+5a m7+5b") => [(invert-chord (chord :b2 :sus4) 2)
-                                                  (invert-chord (chord :b2 :7sus4) 1)
-                                                  (invert-chord (chord :b2 :m+5) 0)
-                                                  (invert-chord (chord :b2 :m7+5) 1)])
+    (chords-seq "b2 sus4c 7sus4b m+5a m7+5b") => [(invert-chord (chord :b2 :sus4) 3)
+                                                  (invert-chord (chord :b2 :7sus4) 2)
+                                                  (invert-chord (chord :b2 :m+5) 1)
+                                                  (invert-chord (chord :b2 :m7+5) 2)])
 
   (fact "repeat `[]` without any arity"
     (chords-seq "f2 [1a 2b]") => (chords-seq "f2 [1a 2b]*1"))

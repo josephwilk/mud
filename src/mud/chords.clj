@@ -61,16 +61,14 @@
 
      (or (integer? current-chord) (re-find #"^\d[abc]*$" current-chord))
      (let [[deg inversions] (if (or (integer? current-chord)
-                                    (re-find #"^\d+$" current-chord)) [(str current-chord) "a"] (remove clojure.string/blank? (clojure.string/split current-chord #"")))
+                                    (re-find #"^\d+$" current-chord)) [(str current-chord) nil] (remove clojure.string/blank? (clojure.string/split current-chord #"")))
            deg (Integer. (re-find  #"\d+" deg))
            invert (case inversions
-                    nil nil
-                    "a" nil
-                    "b" [1]
-                    "c" [1 2])]
-       (if invert
-         (nth (chords-with-inversion invert root scale 3) (- deg 1))
-         (nth (chords-for root scale 3) (- deg 1))))
+                    nil 0
+                    "a" 1
+                    "b" 2
+                    "c" 3)]
+       (invert-chord (chord-degree ((clojure.set/map-invert DEGREE) deg) root scale 3) invert))
 
      :else
      (if (re-find #"[abc]+$" current-chord)
@@ -78,9 +76,9 @@
              chd (clojure.string/join (butlast current-chord))
              invert (case inversions
                       nil 0
-                      "a" 0
-                      "b" 1
-                      "c" 2)]
+                      "a" 1
+                      "b" 2
+                      "c" 3)]
          (chord root (keyword chd) invert))
        (chord root (keyword current-chord))))))
 
