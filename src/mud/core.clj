@@ -144,7 +144,7 @@
   (degrees-seq \"F3 1314 C2 141456\")"
   [notes & [scale]]
   (if (string? notes)
-    (recur (->> (clojure.string/replace  notes #"\s+" "")
+    (recur (->> (clojure.string/replace notes #"\s+" "")
                 (re-seq #"(\D\d|\d)")
                 (map last))
            scale)
