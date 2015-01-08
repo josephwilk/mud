@@ -51,6 +51,13 @@
                inversions))
             (chords-for note scale no-notes)))))
 
+(defn- char->inversion [char]
+  (case char
+    nil 0
+    "a" 1
+    "b" 2
+    "c" 3))
+
 (defn- chord->midi-notes [scale root current-chord]
   (let [current-chord (if (keyword? current-chord) (str (name current-chord)) current-chord)]
     (cond
@@ -63,22 +70,14 @@
      (let [[deg inversions] (if (or (integer? current-chord)
                                     (re-find #"^\d+$" current-chord)) [(str current-chord) nil] (remove clojure.string/blank? (clojure.string/split current-chord #"")))
            deg (Integer. (re-find  #"\d+" deg))
-           invert (case inversions
-                    nil 0
-                    "a" 1
-                    "b" 2
-                    "c" 3)]
+           invert (char->inversion inversions)]
        (invert-chord (chord-degree ((clojure.set/map-invert DEGREE) deg) root scale 3) invert))
 
      :else
      (if (re-find #"[abc]+$" current-chord)
        (let [inversions  (str (last current-chord))
              chd (clojure.string/join (butlast current-chord))
-             invert (case inversions
-                      nil 0
-                      "a" 1
-                      "b" 2
-                      "c" 3)]
+             invert (char->inversion inversions)]
          (chord root (keyword chd) invert))
        (chord root (keyword current-chord))))))
 

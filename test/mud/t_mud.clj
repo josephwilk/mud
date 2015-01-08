@@ -41,9 +41,9 @@
     (chords-seq "b3[1c 2]*2 4b*3") => [(invert-chord (chord-degree :i :b3 :minor 3) 3)
                                        (invert-chord (chord-degree :i :b3 :minor 3) 3)
                                        (chord-degree :ii :b3 :minor 3) (chord-degree :ii :b3 :minor 3)
-                                       (nth (chords-with-inversion [1 2] :b3 :minor 3) 3)
-                                       (nth (chords-with-inversion [1 2] :b3 :minor 3) 3)
-                                       (nth (chords-with-inversion [1 2] :b3 :minor 3) 3)])
+                                       (invert-chord (chord-degree :iv :b3 :minor 3) 2)
+                                       (invert-chord (chord-degree :iv :b3 :minor 3) 2)
+                                       (invert-chord (chord-degree :iv :b3 :minor 3) 2)])
 
   (fact "squished [] patterns"
     (map
