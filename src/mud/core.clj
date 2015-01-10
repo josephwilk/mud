@@ -20,7 +20,9 @@
   "Fill a buffer repeating pattern if required.
    Supports integers or notes which will be converted to midi notes"
   [buf & lists]
-  (buffer-write! buf (take (buffer-size buf) (cycle (map #(if (keyword? %) (note %) %) (flatten lists))))))
+  (if (and (= 1 (count lists)) (var? (first lists)))
+    (apply pattern! buf (var-get (first lists)))
+    (buffer-write! buf (take (buffer-size buf) (cycle (map #(if (keyword? %) (note %) %) (flatten lists)))))))
 
 (defn pattern-at!
   "Exactly as `pattern!` but only writes on a beat."
