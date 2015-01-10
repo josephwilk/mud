@@ -52,9 +52,9 @@ Everything you need to drive synths at beats
 (defonce kick-seq (buffer 256))
 (doall (map #(seqer :beat-num %1 :pattern kick-seq :num-steps 8 :buf (freesound-sample 194114)) (range 0 8)))
 
-(pattern! [1 0 0 1 0 0 0]
-          [1 0 0 1 0 0 0]
-          [1 0 0 1 0 1 0])
+(pattern! kick-seq [1 0 0 1 0 0 0]
+                   [1 0 0 1 0 0 0]
+                   [1 0 0 1 0 1 0])
 ```
 
 ## Callback on beats
