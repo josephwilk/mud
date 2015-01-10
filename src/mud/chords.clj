@@ -11,7 +11,14 @@
     (apply chord-pattern chord-bufs (var-get pattern))
     (let [chord-bufs (if (= :mud.chords/chord-group (type chord-bufs)) (:bufs chord-bufs) chord-bufs)]
       (dotimes [chord-idx (count chord-bufs)]
-        (pattern! (nth chord-bufs chord-idx) (map #(if (> (count %1) chord-idx) (nth %1 chord-idx) 0) pattern)))))
+        (pattern! (nth chord-bufs chord-idx)
+                  (map #(cond
+                         (not (sequential? %1))
+                         %1
+                         (and (sequential? %1) (> (count %1) chord-idx))
+                         (nth %1 chord-idx)
+                         true 0)
+                       pattern)))))
   pattern)
 
 (def _chord-synth-buffer-cache_ (atom []))
