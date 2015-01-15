@@ -8,16 +8,32 @@
   with different buffers."
   [chord-bufs pattern]
   (if (var? pattern)
-    (apply chord-pattern chord-bufs (var-get pattern))
+    (chord-pattern chord-bufs (var-get pattern))
     (let [chord-bufs (if (= :mud.chords/chord-group (type chord-bufs)) (:bufs chord-bufs) chord-bufs)]
       (dotimes [chord-idx (count chord-bufs)]
+        (println :pattern pattern)
+        (println (map #(cond
+                        (and (not (sequential? %1)) (= chord-idx 0))
+                        %1
+
+                        (and (sequential? %1) (> (count %1) chord-idx))
+
+                        (nth %1 chord-idx)
+                        true
+
+                        0)
+                                             pattern))
         (pattern! (nth chord-bufs chord-idx)
                   (map #(cond
-                         (not (sequential? %1))
+                         (and (not (sequential? %1)) (= chord-idx 0))
                          %1
+
                          (and (sequential? %1) (> (count %1) chord-idx))
+
                          (nth %1 chord-idx)
-                         true 0)
+                         true
+
+                         0)
                        pattern)))))
   pattern)
 

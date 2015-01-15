@@ -93,7 +93,6 @@
   "
   ([thing target] (overtime! thing target 0.1))
   ([thing target rate]
-
      (let [things (if-not (vector? thing) [thing] thing)
            things-and-targets (map vector things (repeatedly #(if (fn? target) (target) target)))]
        (doseq [[thing target] things-and-targets]
@@ -171,7 +170,7 @@
                               (concat accum [pattern])))
                            [] notes))))))
 
-(def _beat-trig-idx_ (atom 0))
+(def _beat-trig-idx_ (atom []))
 
 (defn one-time-beat-trigger
   [beat beats func]
@@ -182,17 +181,21 @@
               ::one-time-beat-trigger))
 
 (defn on-beat-trigger [beat func]
-  (swap! _beat-trig-idx_ inc)
-  (on-trigger (:trig-id time/main-beat)
-              (fn [b] (when (= 0.0 (mod b beat))
-                       (func))) (str "on-beat-trigger" @_beat-trig-idx_)))
+  (let [trigger-name (str "on-beat-trigger-" (gensym))]
+    (swap! _beat-trig-idx_ concat [trigger-name])
+    (on-trigger (:trig-id time/main-beat)
+                (fn [b] (when (= 0.0 (mod b beat))
+                         (func))) trigger-name)
+    trigger-name))
 
-(defn remove-on-beat-trigger [] (remove-event-handler ::on-beat-trigger))
+(defn remove-beat-trigger [id]
+  (reset! _beat-trig-idx_ (remove #(= %1 id) @_beat-trig-idx_))
+  (remove-event-handler id))
 
 (defn remove-all-beat-triggers []
-  (doseq [i (range 0 (inc @_beat-trig-idx_))]
-    (remove-event-handler (str "on-beat-trigger" i)))
-  (reset! _beat-trig-idx_ 0))
+  (doseq [trigger-name @_beat-trig-idx_]
+    (remove-event-handler trigger-name))
+  (reset! _beat-trig-idx_ []))
 
 (defn randomly-trigger
   ([change-fn] (randomly-trigger change-fn 0.5 8))
