@@ -112,13 +112,13 @@
 
 (defonce main-beat (beat-bus 1))
 
-(defonce beat-8x (beat-bus 8))
-(defonce beat-7x (beat-bus 7))
-(defonce beat-6x (beat-bus 6))
-(defonce beat-5x (beat-bus 5))
-(defonce beat-4x (beat-bus 4))
-(defonce beat-3x (beat-bus 3))
-(defonce beat-2x (beat-bus 2))
+;;(defonce beat-8x (beat-bus 8))
+;;(defonce beat-7x (beat-bus 7))
+;;(defonce beat-6x (beat-bus 6))
+;;(defonce beat-5x (beat-bus 5))
+;;(defonce beat-4x (beat-bus 4))
+;;(defonce beat-3x (beat-bus 3))
+;;(defonce beat-2x (beat-bus 2))
 
 (defonce beat-1th main-beat)
 (defonce beat-2th (beat-bus 1/2))
@@ -130,3 +130,11 @@
 (defonce beat-8th (beat-bus 1/8))
 (defonce beat-12th (beat-bus 1/12))
 (defonce beat-16th (beat-bus 1/16))
+
+
+(defn switch-timing [node src target]
+  (let [distance (/ (- target src) 10)]
+  (doseq [fraction (range 1 11)]
+     (let [b (beat-bus (+ (* fraction distance) src)))]
+       (ctl-time node b)
+       (Thread/sleep 500))))
