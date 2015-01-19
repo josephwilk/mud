@@ -130,11 +130,3 @@
 (defonce beat-8th (beat-bus 1/8))
 (defonce beat-12th (beat-bus 1/12))
 (defonce beat-16th (beat-bus 1/16))
-
-
-(defn switch-timing [node src target]
-  (let [distance (/ (- target src) 10)]
-  (doseq [fraction (range 1 11)]
-     (let [b (beat-bus (+ (* fraction distance) src)))]
-       (ctl-time node b)
-       (Thread/sleep 500))))
