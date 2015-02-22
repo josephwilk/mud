@@ -211,6 +211,10 @@
 
 (def _sample-trig-idx_ (atom 0))
 (defn sample-trigger
+  ([pattern sample-fn
+    (doseq [[idx beat]
+            (map vector (range) pattern)]
+      (when (= beat 1)) (sample-trigger idx (count pattern) sample-fn))])
   ([start size sample-fn] (sample-trigger start size size sample-fn))
   ([start offset size sample-fn]
      (swap! _sample-trig-idx_ inc)
