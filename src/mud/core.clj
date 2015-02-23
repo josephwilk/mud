@@ -239,9 +239,9 @@
 )
 
 (defn remove-all-sample-triggers []
-  (doseq [i (range 0 (inc @_sample-trig-idx_))]
-    (remove-event-handler (str "sample-trigger-" i)))
-    (reset! _sample-trig-idx_ 0))
+  (doseq [trigger-name @_sample-trig-idx_]
+    (remove-event-handler trigger-name))
+  (reset! _sample-trig-idx_ []))
 
 (defn stutter [rate]
   (future
