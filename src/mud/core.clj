@@ -208,37 +208,26 @@
                                (> (rand) chance)) (change-fn)))
                   ::beat-picker)))
 
-
-(def _sample-trig-idx_ (atom 0))
+(def _sample-trig-idx_ (atom []))
 (defn sample-trigger
   ([pattern sample-fn]
-     (multi-sample-trigger
+     (sample-trigger
       (->> pattern
            (map vector (range) pattern)
            (filter (fn [[idx beat]] (= beat 1)))
            (map first))
       (count pattern) sample-fn))
   ([start size sample-fn]
-     (swap! _sample-trig-idx_ inc)
-     (on-trigger (:trig-id time/beat-1th)
-                 (fn [b]
-                   (when-let [beat (int (mod b size))]
-                     (when (= beat start)
-                       ;;(= beat (+ start (* (floor (/ beat offset)) offset)))
-
-                       (sample-fn))))
-                 (str "sample-trigger-" @_sample-trig-idx_))
-     (str "sample-trigger-" @_sample-trig-idx_)))
-
-(defn- multi-sample-trigger [hits size sample-fn]
-  (swap! _sample-trig-idx_ inc)
-  (on-trigger (:trig-id time/beat-1th)
-              (fn [b]
-                (when-let [beat (int (mod b size))]
-                  (when (some #{beat} hits)
-                    (sample-fn))))
-              (str "sample-trigger-" @_sample-trig-idx_))
-  (str "sample-trigger-" @_sample-trig-idx_))
+     (let [start (if (sequential? start) start [start])
+           trigger-name (str "sample-trigger-" (gensym))]
+       (swap! _sample-trig-idx_ concat [trigger-name])
+       (on-trigger (:trig-id time/beat-1th)
+                   (fn [b]
+                     (when-let [beat (int (mod b size))]
+                       (when (some #{beat} start)
+                         (sample-fn))))
+                   trigger-name)
+       trigger-name)))
 
 (comment
   (def kick-s (freesound 131336))
