@@ -208,6 +208,10 @@
                                (> (rand) chance)) (change-fn)))
                   ::beat-picker)))
 
+(defn- arg-count [f]
+  {:pre [(instance? clojure.lang.AFunction f)]}
+    (-> f class .getDeclaredMethods first .getParameterTypes alength))
+
 (def _sample-trig-idx_ (atom []))
 (defn sample-trigger
   ([pattern sample-fn]
@@ -225,7 +229,9 @@
                    (fn [b]
                      (when-let [beat (int (mod b size))]
                        (when (some #{beat} start)
-                         (sample-fn))))
+                         (if (= 0 (arg-count sample-fn))
+                           (sample-fn)
+                           (sample-fn beat)))))
                    trigger-name)
        trigger-name)))
 
@@ -234,7 +240,9 @@
   (sample-trigger [1 0 0 0 1 0 0 0
                    1 0 0 0 1 0 0 0
                    1 0 0 0 1 0 0 0
-                   1 0 0 0 1 1 1 1] #(kick-s))
+                   1 0 0 0 1 1 1 1] (fn [beat]
+                                      (println beat)
+                                      (kick-s)))
   (remove-all-sample-triggers)
 )
 
