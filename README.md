@@ -70,9 +70,6 @@ We can define callbacks in Clojure land firing on various beat events.
 ;;Dividing beats into 32 parts play sample at 31st beat
 (sample-trigger 31 32 #(mono-player pulse-s))
 
-;;Dividing beats into 32 parts play sample at 0 beat
-(sample-trigger 0 32 #(mono-player pulse-s))
-
 ;;Or express as a list pattern with 1 => hit.
 (sample-trigger [1 0 0 0 0 0 0 0] #(mono-player pulse-s))
 
