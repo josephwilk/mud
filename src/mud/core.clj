@@ -212,10 +212,13 @@
 (def _sample-trig-idx_ (atom 0))
 (defn sample-trigger
   ([pattern sample-fn]
-     (doseq [[idx beat] (map vector (range) pattern)]
-       (when (= beat 1)) (sample-trigger idx (count pattern) sample-fn)))
-  ([start size sample-fn] (sample-trigger start size size sample-fn))
-  ([start offset size sample-fn]
+     (multi-sample-trigger
+      (->> pattern
+           (map vector (range) pattern)
+           (filter (fn [[idx beat]] (= beat 1)))
+           (map first))
+      (count pattern) sample-fn))
+  ([start size sample-fn]
      (swap! _sample-trig-idx_ inc)
      (on-trigger (:trig-id time/beat-1th)
                  (fn [b]
@@ -224,7 +227,27 @@
                        ;;(= beat (+ start (* (floor (/ beat offset)) offset)))
 
                        (sample-fn))))
-                 (str "sample-trigger-" @_sample-trig-idx_))))
+                 (str "sample-trigger-" @_sample-trig-idx_))
+     (str "sample-trigger-" @_sample-trig-idx_)))
+
+(defn- multi-sample-trigger [hits size sample-fn]
+  (swap! _sample-trig-idx_ inc)
+  (on-trigger (:trig-id time/beat-1th)
+              (fn [b]
+                (when-let [beat (int (mod b size))]
+                  (when (some #{beat} hits)
+                    (sample-fn))))
+              (str "sample-trigger-" @_sample-trig-idx_))
+  (str "sample-trigger-" @_sample-trig-idx_))
+
+(comment
+  (def kick-s (freesound 131336))
+  (sample-trigger [1 0 0 0 1 0 0 0
+                   1 0 0 0 1 0 0 0
+                   1 0 0 0 1 0 0 0
+                   1 0 0 0 1 1 1 1] #(kick-s))
+  (remove-all-sample-triggers)
+)
 
 (defn remove-all-sample-triggers []
   (doseq [i (range 0 (inc @_sample-trig-idx_))]
