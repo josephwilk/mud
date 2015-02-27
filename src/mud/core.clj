@@ -5,6 +5,10 @@
 
 (def overtime-default-sleep 200)
 
+(defn- arg-count [f]
+  {:pre [(instance? clojure.lang.AFunction f)]}
+  (-> f class .getDeclaredMethods first .getParameterTypes alength))
+
 (defn ctl-global-clock [rate] (ctl time/root-s :rate rate))
 
 (defn ctl-time
@@ -181,11 +185,14 @@
               ::one-time-beat-trigger))
 
 (defn on-beat-trigger [beat func]
-  (let [trigger-name (str "on-beat-trigger-" (gensym))]
+  (let [trigger-name (str "on-beat-trigger-" (gensym))
+        func-arg-count (arg-count func)]
     (swap! _beat-trig-idx_ concat [trigger-name])
     (on-trigger (:trig-id time/main-beat)
                 (fn [b] (when (= 0.0 (mod b beat))
-                         (func))) trigger-name)
+                         (if (= 0 func-arg-count)
+                           (func)
+                           (func b)))) trigger-name)
     trigger-name))
 
 (defn remove-beat-trigger [id]
@@ -207,10 +214,6 @@
                     (when (and (= 0 (mod @random-counter at-beat))
                                (> (rand) chance)) (change-fn)))
                   ::beat-picker)))
-
-(defn- arg-count [f]
-  {:pre [(instance? clojure.lang.AFunction f)]}
-    (-> f class .getDeclaredMethods first .getParameterTypes alength))
 
 (def _sample-trig-idx_ (atom []))
 (defn sample-trigger
