@@ -76,6 +76,9 @@ We can define callbacks in Clojure land firing on various beat events.
 ;;Fire once on beat 0 dividing beats into 128 parts and then remove callback.
 (one-time-beat-trigger 0 128 #(mono-player pulse-s))
 
+;;Callbacks can take the current beat as an argument, useful for varying a sample:
+(one-time-beat-trigger 0 128 (fn [beat] (mono-player pulse-s :rate (if (= 0 (mod beat 256)) 1.0 1.1))))
+
 ;;Remove all registered triggers
 (remove-all-sample-triggers)
 (remove-all-beat-triggers)
