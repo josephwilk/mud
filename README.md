@@ -108,8 +108,8 @@ Use a single synth/inst def to play chords.
 Make it easier to write a score, when switching of scales/chords
 
 ```clojure
-(degrees-seq [:f3 1 6 1 4 :F2 1 1 :C3 1 1]) ;;Lowercase -> minor
-                                            ;;Uppercase -> major
+(degrees-seq [:f3 1614 :F2 11 :C3 11]) ;;Lowercase -> minor
+                                       ;;Uppercase -> major
 
 ;;a first inversion, b second inversion, etc.
 ;; :sus4*2 is a shortcut for [:sus4 :sus4]
