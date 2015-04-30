@@ -226,15 +226,16 @@
       (count pattern) sample-fn))
   ([start size sample-fn]
      (let [start (if (sequential? start) start [start])
-           trigger-name (str "sample-trigger-" (gensym))]
+           trigger-name (str "sample-trigger-" (gensym))
+           fn-arg-count (arg-count sample-fn)]
        (swap! _sample-trig-idx_ concat [trigger-name])
        (on-trigger (:trig-id time/beat-1th)
                    (fn [b]
                      (when-let [beat (int (mod b size))]
                        (when (some #{beat} start)
-                         (if (= 0 (arg-count sample-fn))
+                         (if (= 0 fn-arg-count)
                            (sample-fn)
-                           (sample-fn beat)))))
+                           (sample-fn b)))))
                    trigger-name)
        trigger-name)))
 
