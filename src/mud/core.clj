@@ -382,6 +382,6 @@
 
 (defn spread 
   "Euclidean distribution for beats"
-  ([num-accents size] (spread num-accents size 0)
+  ([num-accents size] (spread num-accents size 0))
   ([num-accents size rotate]
-    (map #(< (* %1 (mod num-accents size)) num-accents) (range 0 size)))))
+    (map #(< (* %1 (mod num-accents size)) num-accents) (range 0 size))))
