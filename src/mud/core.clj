@@ -380,8 +380,13 @@
   (remove-all-sample-triggers)
   (stop))
 
-(defn spread 
+(defn spread
   "Euclidean distribution for beats"
   ([num-accents size] (spread num-accents size 0))
-  ([num-accents size rotate]
-    (map #(< (* %1 (mod num-accents size)) num-accents) (range 0 size))))
+  ([num-accents size rotate-amount]
+     (let [pattern (map #(< (* %1 (mod num-accents size)) num-accents) (range 0 size))]
+       (rotate rotate-amount pattern ))))
+
+(comment
+  (spread 1 8 4)
+  )
