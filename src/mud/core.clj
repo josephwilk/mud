@@ -381,12 +381,21 @@
   (stop))
 
 (defn spread
-  "Euclidean distribution for beats"
+  "Euclidean distribution for beats
+
+  ```
+  (spread 1 4) => [true false false false]
+  ```
+  "
   ([num-accents size] (spread num-accents size 0))
   ([num-accents size rotate-amount]
-     (let [pattern (map #(< (* %1 (mod num-accents size)) num-accents) (range 0 size))]
-       (rotate rotate-amount pattern ))))
-
-(comment
-  (spread 1 8 4)
-  )
+     (if (> num-accents size)
+       (map (fn [_] true) (range 0 size))
+       (let [pattern (map #(< (mod (* %1 num-accents) size) num-accents) (range 0 size))]
+         (loop [rotations rotate-amount
+                res pattern]
+           (if (> rotations 0)
+             (let [res (rotate 1 res)
+                   rotations  (if (= true (first res)) (dec rotations) rotations)]
+               (recur rotations res))
+             res))))))

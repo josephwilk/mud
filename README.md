@@ -140,6 +140,17 @@ Writing patterns to buffers.
 (pattern-repeat! 8 notes-buf #(degrees (shuffle [5 3 7]) :minor :F3))
 ```
 
+Euclidean distribution for beats (From 'The Euclidean Algorithm Generates Traditional Musical Rhythms' (Toussaint 2005)).
+
+```clojure
+(spread 1 4)   ;; Spread 1 hit over 4
+(spread 3, 8)  ;; Spread 3 hit over 8
+(spread 7, 11) ;; Spread 7 hit over 11
+
+(spread 1 4 1) ;; Spread 1 hit over 4, rotate to the next strong beat
+(spread 1 4 2) ;; Spread 1 hit over 4, rotate to the next+1 strong beat
+```
+
 ## Goals
 
 * Its centered around using Supercollider for timing rather than Java.

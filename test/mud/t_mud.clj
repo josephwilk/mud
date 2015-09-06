@@ -70,3 +70,10 @@
   (sort (nth (chords-with-inversion [1]     :b3 :minor 3) 0)) => (invert-chord (chord-degree :i :b3 :minor 3) 1)
   (sort (nth (chords-with-inversion [1 2]   :b3 :minor 3) 0)) => (invert-chord (chord-degree :i :b3 :minor 3) 2)
   (sort (nth (chords-with-inversion [1 2 3] :b3 :minor 3) 0)) => (invert-chord (chord-degree :i :b3 :minor 3) 3))
+
+
+(facts "spread"
+  (fact "supports interesting patterns"
+    (spread 1 4)   => [true false false false]
+    (spread 5 13)  => [true false false true false false true false true false false true false]
+    (spread 3 8 1) => [true false false true false true false false]))
