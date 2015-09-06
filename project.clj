@@ -1,4 +1,4 @@
-(defproject mud "0.1.0-SNAPSHOT"
+(defproject mud "0.1.1-SNAPSHOT"
   :description "Musical Universes of Discourse"
   :url "https://github.com/josephwilk/mud"
   :license {:name "Eclipse Public License"
