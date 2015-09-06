@@ -156,7 +156,7 @@ Euclidean distribution for beats (From 'The Euclidean Algorithm Generates Tradit
 
 ;;Without rotation a spacing of 332
 (spread 3 8)   ;;=> [true false false true false false true false) 
-;;With rotation a single rotation spacing of 323
+;;With a single rotation a spacing of 323
 (spread 3 8 1) ;;=> [true false false true false true false false]
 
 ;;Still toying with if spread returns bools or 1.0/0.0
