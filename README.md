@@ -143,12 +143,25 @@ Writing patterns to buffers.
 Euclidean distribution for beats (From 'The Euclidean Algorithm Generates Traditional Musical Rhythms' (Toussaint 2005)).
 
 ```clojure
-(spread 1 4)   ;; Spread 1 hit over 4
-(spread 3, 8)  ;; Spread 3 hit over 8
-(spread 7, 11) ;; Spread 7 hit over 11
+;;Spread 1 hit over 4
+(spread 1 4)   ;;=> [true false false false]
 
-(spread 1 4 1) ;; Spread 1 hit over 4, rotate to the next strong beat
-(spread 1 4 2) ;; Spread 1 hit over 4, rotate to the next+1 strong beat
+;; Spread 3 hit over 8
+(spread 3, 8)  ;;=> [true false false true false false true false]
+
+;;Spread 7 hit over 11
+(spread 7, 11) ;;=> [true false true false true true false true true false true] 
+
+;;Rotations to the next strong beat
+
+;;Without rotation a spacing of 332
+(spread 3 8)   ;;=> [true false false true false false true false) 
+;;With rotation a single rotation spacing of 323
+(spread 3 8 1) ;;=> [true false false true false true false false]
+
+;;Still toying with if spread returns bools or 1.0/0.0
+(defonce drum-hits (buffer 128))
+(pattern! drum-hits (map #(if %1 1.0 0.0) (spread 1 4)))
 ```
 
 ## Goals
