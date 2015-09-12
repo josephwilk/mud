@@ -384,13 +384,13 @@
   "Euclidean distribution for beats
 
   ```
-  (spread 1 4) => [true false false false]
+  (spread 1 4) => [1.0 0.0 0.0 0.0]
   ```
   "
   ([num-accents size] (spread num-accents size 0))
   ([num-accents size rotate-amount]
      (if (> num-accents size)
-       (map (fn [_] true) (range 0 size))
+       (map (fn [_] 1.0) (range 0 size))
        (let [pattern (map #(< (mod (* %1 num-accents) size) num-accents) (range 0 size))]
          (loop [rotations rotate-amount
                 res pattern]
@@ -398,4 +398,4 @@
              (let [res (rotate 1 res)
                    rotations  (if (= true (first res)) (dec rotations) rotations)]
                (recur rotations res))
-             res))))))
+             (map #(if %1 1.0 0.0) res))))))
