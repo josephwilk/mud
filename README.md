@@ -13,7 +13,7 @@ experience for the audience reading along with the code.
 Add in your project.clj file:
 
 ```clojure
-[mud "0.1.0-SNAPSHOT"]
+[mud "0.1.1-SNAPSHOT"]
 ```
 
 ## Usage
