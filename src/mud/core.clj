@@ -398,4 +398,4 @@
              (let [res (rotate 1 res)
                    rotations  (if (= true (first res)) (dec rotations) rotations)]
                (recur rotations res))
-             (map #(if %1 1.0 0.0) res))))))
+             (map #(if %1 1.0 0.0) res)))))))
